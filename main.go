@@ -10,7 +10,7 @@ import (
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
-func main(){
+func main() {
 	cfg, err := config.Read()
 	if err != nil {
 		log.Fatal("Error reading config", err)

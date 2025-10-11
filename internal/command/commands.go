@@ -17,10 +17,9 @@ func (c *Commands) Register(name string, f func(*state.State, Command) error) {
 	c.Handlers[name] = f
 }
 
-
 func (c *Commands) Run(s *state.State, cmd Command) error {
 	handler, exists := c.Handlers[cmd.Name]
-	if !exists{
+	if !exists {
 		return fmt.Errorf("unknown command: %s", cmd.Name)
 	}
 	return handler(s, cmd)

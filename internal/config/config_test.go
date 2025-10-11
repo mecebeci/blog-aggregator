@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestRead(t *testing.T){
+func TestRead(t *testing.T) {
 	home, _ := os.MkdirTemp("", "gatorhome")
 	defer os.RemoveAll(home)
 

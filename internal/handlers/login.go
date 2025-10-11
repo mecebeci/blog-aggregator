@@ -8,7 +8,7 @@ import (
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
-func HandleLogin(s *state.State, cmd command.Command) error{
+func HandleLogin(s *state.State, cmd command.Command) error {
 	if len(cmd.Args) < 1 {
 		return errors.New("usage: gator login <username>")
 	}
