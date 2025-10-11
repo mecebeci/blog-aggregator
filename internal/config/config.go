@@ -19,7 +19,7 @@ func Read() (Config, error) {
 
 	configPath := filepath.Join(home, ".gatorconfig.json")
 
-	data, err := os.ReadFile(configPath)
+	data, err := os.ReadFile(configPath) // #nosec G304
 	if err != nil {
 		return Config{}, err
 	}
@@ -47,7 +47,7 @@ func (c *Config) SetUser(username string) error {
 		return err
 	}
 
-	err = os.WriteFile(configPath, data, 0644)
+	err = os.WriteFile(configPath, data, 0600)
 	if err != nil {
 		return err
 	}

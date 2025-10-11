@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/mecebeci/blog-aggregator/internal/command"
 	"github.com/mecebeci/blog-aggregator/internal/config"
+	"github.com/mecebeci/blog-aggregator/internal/database"
 	"github.com/mecebeci/blog-aggregator/internal/handlers"
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
@@ -16,12 +19,22 @@ func main() {
 		log.Fatal("Error reading config", err)
 	}
 
+	db, err := sql.Open("postgres", cfg.DBUrl)
+	if err != nil {
+		log.Fatal("Failed to connect to databse:", err)
+	}
+	defer db.Close()
+	dbQueries := database.New(db)
+
 	appState := &state.State{
 		Config: &cfg,
+		DB:     dbQueries,
 	}
 
 	cmds := command.Commands{}
 	cmds.Register("login", handlers.HandleLogin)
+	cmds.Register("register", handlers.HandleRegister)
+	cmds.Register("reset", handlers.HandleReset)
 
 	args := os.Args
 	if len(args) < 2 {
