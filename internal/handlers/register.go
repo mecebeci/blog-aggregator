@@ -39,7 +39,7 @@ func HandleRegister(s *state.State, cmd command.Command) error {
 	if err := s.Config.SetUser(username); err != nil {
 		return err
 	}
-	
+
 	fmt.Printf("User %s successfully registered with id: %s\n", user.Name, user.ID.String())
 	return nil
 }

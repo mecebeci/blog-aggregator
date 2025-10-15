@@ -33,7 +33,7 @@ func HandleAddFeed(s *state.State, cmd command.Command, user database.User) erro
 	}
 
 	follow, err := s.DB.CreateFeedFollow(context.Background(), database.CreateFeedFollowParams{
-		ID: uuid.New(),
+		ID:     uuid.New(),
 		UserID: user.ID,
 		FeedID: feed.ID,
 	})

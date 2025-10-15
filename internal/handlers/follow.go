@@ -22,13 +22,13 @@ func HandleFollow(s *state.State, cmd command.Command, user database.User) error
 		return fmt.Errorf("feed not found URL %s: %w", feedURL, err)
 	}
 
-	follow, err := s.DB.CreateFeedFollow(context.Background(), 
+	follow, err := s.DB.CreateFeedFollow(context.Background(),
 		database.CreateFeedFollowParams{
 			ID:     uuid.New(),
 			UserID: user.ID,
 			FeedID: feed.ID,
 		})
-	if err != nil{
+	if err != nil {
 		return fmt.Errorf("could not follow feed: %w", err)
 	}
 

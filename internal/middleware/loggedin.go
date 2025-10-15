@@ -10,12 +10,11 @@ import (
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
-
 var ErrNotLoggedIn = errors.New("no user is currently logged in")
 
 type LoggedInHandler func(s *state.State, cmd command.Command, user database.User) error
 
-func MiddlewareLoggedIn(h LoggedInHandler) func(*state.State, command.Command)error {
+func MiddlewareLoggedIn(h LoggedInHandler) func(*state.State, command.Command) error {
 	return func(s *state.State, cmd command.Command) error {
 		if s.Config.CurrentUserName == "" {
 			return ErrNotLoggedIn
