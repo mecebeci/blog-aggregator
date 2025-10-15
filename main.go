@@ -10,6 +10,7 @@ import (
 	"github.com/mecebeci/blog-aggregator/internal/config"
 	"github.com/mecebeci/blog-aggregator/internal/database"
 	"github.com/mecebeci/blog-aggregator/internal/handlers"
+	"github.com/mecebeci/blog-aggregator/internal/middleware"
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
@@ -37,10 +38,10 @@ func main() {
 	cmds.Register("reset", handlers.HandleReset)
 	cmds.Register("users", handlers.HandleUsers)
 	cmds.Register("agg", handlers.HandleAgg)
-	cmds.Register("addfeed", handlers.HandleAddFeed)
+	cmds.Register("addfeed", middleware.MiddlewareLoggedIn(handlers.HandleAddFeed))
 	cmds.Register("feeds", handlers.HandleFeeds)
-	cmds.Register("follow", handlers.HandleFollow)
-	cmds.Register("following", handlers.HandleFollowing)
+	cmds.Register("follow", middleware.MiddlewareLoggedIn(handlers.HandleFollow))
+	cmds.Register("following", middleware.MiddlewareLoggedIn(handlers.HandleFollowing))
 
 	args := os.Args
 	if len(args) < 2 {

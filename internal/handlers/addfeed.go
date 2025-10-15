@@ -11,19 +11,13 @@ import (
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
-func HandleAddFeed(s *state.State, cmd command.Command) error {
+func HandleAddFeed(s *state.State, cmd command.Command, user database.User) error {
 	if len(cmd.Args) < 2 {
 		return fmt.Errorf("usage: addfeed <name> <url>")
 	}
 
 	feedName := cmd.Args[0]
 	feedUrl := cmd.Args[1]
-
-	user, err := s.DB.GetUserByName(context.Background(), s.Config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("failed to find logged-in user: %w", err)
-	}
-
 	now := time.Now()
 
 	feed, err := s.DB.CreateFeed(context.Background(), database.CreateFeedParams{

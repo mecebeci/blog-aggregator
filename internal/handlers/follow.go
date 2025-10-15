@@ -10,17 +10,12 @@ import (
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
-func HandleFollow(s *state.State, cmd command.Command) error {
+func HandleFollow(s *state.State, cmd command.Command, user database.User) error {
 	if len(cmd.Args) < 1 {
 		return fmt.Errorf("usage: follow <feed-url>")
 	}
 
 	feedURL := cmd.Args[0]
-
-	user, err := s.DB.GetUserByName(context.Background(), s.Config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("could not get current user: %w", err)
-	}
 
 	feed, err := s.DB.GetFeedByURL(context.Background(), feedURL)
 	if err != nil {
