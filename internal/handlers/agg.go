@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"context"
 	"fmt"
+	"time"
 
 	"github.com/mecebeci/blog-aggregator/internal/command"
 	"github.com/mecebeci/blog-aggregator/internal/feed"
@@ -10,13 +10,28 @@ import (
 )
 
 func HandleAgg(s *state.State, cmd command.Command) error {
-	feedUrl := "https://www.wagslane.dev/index.xml"
-
-	rss, err := feed.FetchFeed(context.Background(), feedUrl)
-	if err != nil {
-		return fmt.Errorf("failed to fetch feed: %w: ", err)
+	if len(cmd.Args) < 1 {
+		return fmt.Errorf("usage: agg <time_between_reqs>")
 	}
 
-	fmt.Printf("Fetched feed: \n%+v\n", rss)
+	timeBetweenRequests, err := time.ParseDuration(cmd.Args[0])
+	if err != nil {
+		return fmt.Errorf("invalid duration format: %w", err)
+	}
+
+	fmt.Printf("Collecting feeds every %s...\n", timeBetweenRequests)
+
+	ticker := time.NewTicker(timeBetweenRequests)
+	defer ticker.Stop()
+
+	if err := feed.ScrapeFeeds(s); err != nil {
+		fmt.Println("initial scrape error: ", err)
+	}
+
+	for range ticker.C {
+		if err := feed.ScrapeFeeds(s); err != nil {
+			fmt.Println("scrape error: ", err)
+		}
+	}
 	return nil
 }
