@@ -4,8 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/mecebeci/blog-aggregator/internal/database"
 	"github.com/mecebeci/blog-aggregator/internal/state"
 )
 
@@ -30,8 +33,30 @@ func ScrapeFeeds(s *state.State) error {
 	}
 
 	for _, item := range rss.Items {
-		fmt.Printf("• %s\n", item.Title)
+		publishedAt, err := time.Parse(time.RFC1123Z, item.Published)
+		if err != nil {
+			log.Printf("failed to parse published time for %s: %v", item.Title, err)
+		}
+
+		_, err = s.DB.CreatePost(ctx, database.CreatePostParams{
+			ID:          uuid.New(),
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+			Title:       item.Title,
+			Url:         item.Link,
+			Description: item.Description,
+			PublishedAt: publishedAt,
+			FeedID:      nextFeed.ID,
+		})
+		if err != nil {
+			if strings.Contains(err.Error(), "duplicate key value"){
+				continue
+			}
+			log.Printf("failed to insert post (%s): %v", err)
+			continue
+		}
 	}
+
 	log.Printf("Finished fetching feed: %s at %s\n", nextFeed.Name, time.Now().Format(time.RFC3339))
 	return nil
 }

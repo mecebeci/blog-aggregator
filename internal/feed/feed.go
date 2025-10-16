@@ -21,6 +21,7 @@ type Item struct {
 	Title       string `xml:"title"`
 	Description string `xml:"description"`
 	Link        string `xml:"link"`
+	Published string `xml:"pubDate"`
 }
 
 func FetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
