@@ -16,7 +16,7 @@ func HandleBrowse(s *state.State, cmd command.Command, user database.User) error
 
 	if len(cmd.Args) > 0 {
 		num, err := strconv.Atoi(cmd.Args[0])
-		if err != nil  {
+		if err != nil {
 			return fmt.Errorf("invalid limit value: %w", err)
 		}
 		limit = int32(num)
@@ -24,7 +24,7 @@ func HandleBrowse(s *state.State, cmd command.Command, user database.User) error
 
 	posts, err := s.DB.GetPostsForUser(ctx, database.GetPostsForUserParams{
 		UserID: user.ID,
-		Limit: limit,
+		Limit:  limit,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to get posts: %w", err)
@@ -35,7 +35,7 @@ func HandleBrowse(s *state.State, cmd command.Command, user database.User) error
 		return nil
 	}
 
-	for _, post := range posts{
+	for _, post := range posts {
 		fmt.Printf("Title: %s\n", post.Title)
 		fmt.Printf("URL: %s\n", post.Url)
 		fmt.Printf("Published: %s\n", post.PublishedAt.Format("2006-01-02 15:04:05"))

@@ -49,7 +49,7 @@ func ScrapeFeeds(s *state.State) error {
 			FeedID:      nextFeed.ID,
 		})
 		if err != nil {
-			if strings.Contains(err.Error(), "duplicate key value"){
+			if strings.Contains(err.Error(), "duplicate key value") {
 				continue
 			}
 			log.Printf("failed to insert post (%s): %v", err)
